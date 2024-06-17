@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using Test_Taste_Console_Application.Domain.DataTransferObjects;
 
 namespace Test_Taste_Console_Application.Domain.Objects
@@ -12,7 +13,23 @@ namespace Test_Taste_Console_Application.Domain.Objects
         public ICollection<Moon> Moons { get; set; }
         public float AverageMoonGravity
         {
-            get => 0.0f;
+            get
+            {
+                try
+                {
+                    if (Moons == null || Moons.Count == 0)
+                    {
+                        return 0.0f;
+                    }
+
+                    return Moons.Average(moon => moon.Gravity);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error calculating average moon gravity for planet {Id}: {ex.Message}");
+                    return 0.0f;
+                }
+            }
         }
 
         public Planet(PlanetDto planetDto)
